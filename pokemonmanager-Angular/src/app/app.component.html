@@ -1,0 +1,201 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" style="color: white">Pokemon Manager</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+    aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" data-toggle="modal" data-target="collapse" (click)="onOpenModal(null, 'add')">Add Pokemon <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input type="search" (ngModelChange)="searchPokemon(key.value)" #key="ngModel" ngModel name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search pokemon..."
+        required />
+    </form>
+  </div>
+</nav>
+<div class="container" id="main-container">
+  <div class="row">
+    <div *ngFor="let pokemon of pokemons" class="col-md-6 col-xl-3">
+      <div class="card m-b-30">
+        <div class="card-body row">
+          <div class="col-6">
+            <a href=""><img src="{{pokemon?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60" /></a>
+          </div>
+          <div class="col-6 card-title align-self-center mb-0">
+            <h5>{{pokemon?.name}}</h5>
+            <p class="m-0">Ability: {{pokemon?.ability}}</p>
+          </div>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><i class="fa float-right"></i>{{pokemon.move1}}</li>
+          <li class="list-group-item"><i class="fa float-right"></i>{{pokemon.move2}}</li>
+          <li class="list-group-item"><i class="fa float-right"></i>{{pokemon.move3}}</li>
+          <li class="list-group-item"><i class="fa float-right"></i>{{pokemon.move4}}</li>
+        </ul>
+        <div class="card-body">
+          <div class="float-right btn-group btn-group-sm">
+            <a class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit" (click)="onOpenModal(pokemon, 'edit')">
+              <i class="fa fa-pencil"></i>
+            </a>
+            <a class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete" (click)="onOpenModal(pokemon, 'delete')">
+              <i class="fa fa-times"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Modal -->
+  <div class="modal fade" id="addPokemonModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addEmployeeModalLabel">Add Pokemon</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddPokemon(addForm)">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required />
+            </div>
+            <div class="form-group">
+              <label for="ability">Ability</label>
+              <input type="text" ngModel name="ability" class="form-control" id="ability" placeholder="Ability" required />
+            </div>
+            <div class="form-group">
+              <label for="move1">Move #1</label>
+              <input type="text" ngModel name="move1" class="form-control" id="move1" placeholder="Move # 1"
+                required />
+            </div>
+            <div class="form-group">
+              <label for="move2">Move #2</label>
+              <input type="text" ngModel name="move2" class="form-control" id="move2" placeholder="Move # 2" required />
+            </div>
+            <div class="form-group">
+              <label for="move2">Move #3</label>
+              <input type="text" ngModel name="move3" class="form-control" id="move3" placeholder="Move # 3" required />
+            </div>
+            <div class="form-group">
+              <label for="move4">Move #4</label>
+              <input type="text" ngModel name="move4" class="form-control" id="move4" placeholder="Move # 4" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Image URL</label>
+              <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL"
+                required />
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-pokemon-form" class="btn btn-secondary" data-dismiss="modal">
+                Close
+              </button>
+              <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="updatePokemonModal" tabindex="-1" role="dialog" aria-labelledby="employeeEditModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateEmployeeModalLabel">
+            Edit {{editPokemon?.name}}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" ngModel="{{editPokemon?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp"
+                placeholder="Name" />
+            </div>
+            <input type="hidden" ngModel="{{editPokemon?.id}}" name="id" class="form-control" id="id" placeholder="Email" />
+            <input type="hidden" ngModel="{{editPokemon?.pokemonCode}}" name="userCode" class="form-control" id="userCode" placeholder="Email" />
+            <div class="form-group">
+              <label for="ability">Ability</label>
+              <input type="text" ngModel="{{editPokemon?.ability}}" name="ability" class="form-control" id="ability" placeholder="Ability" />
+            </div>
+            <div class="form-group">
+              <label for="move1">Move # 1</label>
+              <input type="text" ngModel="{{editPokemon?.move1}}" name="move1" class="form-control" id="move1" placeholder="Move # 1" />
+            </div>
+            <div class="form-group">
+              <label for="move2">Move #2 </label>
+              <input type="text" ngModel="{{editPokemon?.move2}}" name="move2" class="form-control" id="move2"
+                placeholder="Move # 2" />
+            </div>
+            <div class="form-group">
+              <label for="move3">Move #3 </label>
+              <input type="text" ngModel="{{editPokemon?.move3}}" name="move3" class="form-control" id="move3"
+                placeholder="Move # 3" />
+            </div>
+            <div class="form-group">
+              <label for="move4">Move #4 </label>
+              <input type="text" ngModel="{{editPokemon?.move4}}" name="move4" class="form-control" id="move4"
+                placeholder="Move # 4" />
+            </div>
+            <div class="form-group">
+              <label for="phone">Image URL</label>
+              <input type="text" ngModel="{{editPokemon?.imageUrl}}" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" />
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">
+                Close
+              </button>
+              <button (click)="onUpdatePokemon(editForm.value)" data-dismiss="modal" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deletePokemonModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModelLabel">Delete Pokemon</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete {{deletePokemon?.name}}</p>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+              No
+            </button>
+            <button (click)="onDeletePokemon(deletePokemon?.id!)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notification for no Pokemon -->
+<div *ngIf="pokemons?.length == 0"  class="col-lg-12 col-md-12 col-xl-12">
+  <div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">NO POKEMON!</h4>
+    <p>No Pokemon were found.</p>
+  </div>
+</div>
