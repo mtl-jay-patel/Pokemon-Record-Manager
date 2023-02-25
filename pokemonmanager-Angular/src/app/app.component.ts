@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
   }
 
   public onAddPokemon(addForm: NgForm): void {
-    document.getElementById('add-pokemon-form')?.click(); //form window closes (via programatically clicking on close button) when save button clicked
+    document.getElementById('add-pokemon-form')?.click();
     this.pokemonService.addPokemon(addForm.value).subscribe(
       (response: Pokemon) => {
         console.log(response);
@@ -91,11 +91,11 @@ export class AppComponent implements OnInit {
   }
 
   public onOpenModal(pokemon: Pokemon | null, mode: string): void {
-    const container = document.getElementById('main-container'); //have access to main div via id
-    const button = document.createElement('button'); //creatwe button
+    const container = document.getElementById('main-container'); 
+    const button = document.createElement('button'); 
     button.type = 'button';
-    button.style.display = 'none'; //hide button since we already have required ui buttons enabled (when ui ones clicked, it initiates this create button, which will then toggle whatever needed)
-    button.setAttribute('data-toggle', 'modal'); //create new attribute for button called data toggle, set its value to modal
+    button.style.display = 'none'; 
+    button.setAttribute('data-toggle', 'modal'); 
     if (mode === 'add') {
       button.setAttribute('data-target', '#addPokemonModal');
     }
@@ -107,8 +107,7 @@ export class AppComponent implements OnInit {
       this.deletePokemon = pokemon;
       button.setAttribute('data-target', '#deletePokemonModal');
     }
-    container?.appendChild(button); //add button to div DOM
-    button.click();
+    container?.appendChild(button); 
     
 
 
